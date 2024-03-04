@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<script src="/socket.io/socket.io.js"></script>
+	</head>
+	<body>
+		<label for="ch">Msg:</label><input id="ch" onkeyup="ty()" type="text"><input onclick="send()" type="submit">
+		<script>
+			const socket = io.connect();
+            u = prompt("Type ur name")
+            socket.on("typing", (data) => {
+            p = document.createElement("p")
+            p.innerText = (data + " is typing...")
+
+            document.body.append(p)
+            })
+            socket.on("msg", (data) => {
+                
+                a = document.createElement("p")
+                if(data.name!=undefined){
+                    a.innerText = (data.name+" : "+data.text)
+                    data.name!=u? a.style.color ="blue":a.style.color = "red";
+                  
+                    }
+                else{
+                    a.innerText = (data.text)
+                }
+               
+                document.body.append(a)
+
+            })
+            x = document.getElementById("ch");
+            function ty() {
+                console.log("u :" + u);
+                socket.emit("typing", u)
+            }
+            function send() {
+                socket.emit("msg", {text:x.value,name:u})
+            }
+		</script>
+	</body>
+</html>
